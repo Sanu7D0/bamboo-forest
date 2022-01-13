@@ -32,3 +32,7 @@ nsp_main.on("connection", (socket) => {
 server.listen(PORT, () => {
   console.log(`Socket IO server listening on port ${PORT}`);
 });
+
+const TextHole = require("./src/TextHole.js");
+let th = new TextHole();
+th.test();
