@@ -18,7 +18,12 @@
       const canvas = document.getElementById("canvas-main");
       const ctx = canvas.getContext("2d");
       // socket = io.connect('http://x.x.x.x:80');
-      const socket = io("/main-namespace");
+      const socket = io();
+
+      socket.on("data-objects", (...args) => {
+        let a = JSON.parse(args[0]);
+        console.log(a);
+      });
 
       // 데이터로 캔버스를 그림
       function renderCanvas() {
