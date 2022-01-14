@@ -20,7 +20,7 @@ export default class TextHole {
 
     this.engine = Engine.create();
 
-    this.ground = Bodies.rectangle(WIDTH / 2, HEIGHT, WIDTH, 100, {
+    this.ground = Bodies.rectangle(0, HEIGHT, WIDTH, 10, {
       isStatic: true,
     });
   }
@@ -51,6 +51,7 @@ export default class TextHole {
     });
   }
 
+  // NOTE: runPhysics를 여러번 부르면 world의 시간이 빨라진다 -> 순서 관리 필요
   runPhysics(duration) {
     console.log("Physics run started");
 
