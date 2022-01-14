@@ -14,51 +14,56 @@
     <!-- 여기에 element 추가 -->
 
     <canvas id="canvas-main" width="400px" height="600px"></canvas>
-     <button id="record_button" onclick="record_button_click();">녹음 시작</button>
+    <button id="record_button" onclick="record_button_click();">
+      녹음 시작
+    </button>
     <!-- <button id="record_button" onclick="stop_button_click();">녹음 중지</button> -->
-    <script src='annyang.js'></script>
+    <script src="annyang.js"></script>
     <script type="text/javascript">
+      const canvas = getElementById("canvas-main");
+      const ctx = canvas.getContext("2d");
+
       // socket = io.connect('http://x.x.x.x:80');
       const socket = io();
-      
-       const btn =document.getElementById('record_button');
-      
+
+      const btn = document.getElementById("record_button");
+
       function record_button_click() {
-        annyang.start({autoRestart: false, continuous: true})
+        annyang.start({ autoRestart: false, continuous: true });
         var recognition = annyang.getSpeechRecognizer();
-        var final_transcript= "";
+        var final_transcript = "";
         recognition.interimResults = true;
-        recognition.onresult = function(event) {
+        recognition.onresult = function (event) {
           var interim_transcript = "";
           final_transcript = "";
-          for (var i = event.resultIndex; i<event.results.length; ++i) {
+          for (var i = event.resultIndex; i < event.results.length; ++i) {
             if (event.results[i].isFinal) {
-              final_transcript +=event.results[i][0].transcript;
-              console.log("final_transcript= "+final_transcript);
+              final_transcript += event.results[i][0].transcript;
+              console.log("final_transcript= " + final_transcript);
               sendVoiceData(final_transcript);
               //annyang.trigger(final_transcript);
               //If the sentence is "final" for the Web Speech API, we can try to trigger the sentence
             } else {
               interim_transcript += event.results[i][0].transcript;
-              console.log("interim_transcript= "+interim_transcript);
+              console.log("interim_transcript= " + interim_transcript);
             }
           }
           annyang.abort();
           alert("음성 인식이 완료되었습니다.");
-        }
+        };
         //recordStart()
       }
 
       socket.on("data-objects", (obj) => {
         let objects = JSON.parse(obj);
-        render(objects);
+        renderCanvas(objects);
       });
 
       // 데이터로 캔버스를 그림
       function renderCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         // 그리기
-      
+
         ctx.fillStyle = "red";
         for (let idx in objects) {
           let x = objects[idx].x,
@@ -66,7 +71,7 @@
 
           // TODO: width, height 적용
           let w = 40,
-            h = 40;  
+            h = 40;
 
           ctx.save(); // save ctx properties
 
@@ -77,7 +82,7 @@
           ctx.fillRect(-w / 2, -h / 2, w, h);
 
           ctx.restore(); // restore ctx properties
-        
+        }
       }
 
       // 목소리 텍스트를 서버로 전송
