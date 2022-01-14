@@ -25,11 +25,11 @@ export default class TextHole {
   }
 
   updateObjectsInfo() {
-    for (let o in this.objects) {
-      this.objectsInfo.text = o.text;
-      this.objectsInfo.x = o.x;
-      this.objectsInfo.y = o.y;
-      this.objectsInfo.angle = o.angle;
+    for (let i = 0; i < this.objects.length; i++) {
+      this.objectsInfo[i].text = this.objects[i].text;
+      this.objectsInfo[i].x = this.objects[i].position.x;
+      this.objectsInfo[i].y = this.objects[i].position.y;
+      this.objectsInfo[i].angle = this.objects[i].angle;
     }
   }
 
@@ -46,15 +46,21 @@ export default class TextHole {
     });
   }
 
-  test() {
-    this.createTextObject("A", 400, 200);
-    this.createTextObject("B", 450, 50);
+  runPhysics(duration) {
+    console.log("Physics run started");
 
     // add all of the bodies to the world
     Composite.add(this.engine.world, [...this.objects, this.ground]);
 
+    let startTime = Date.now();
+
     // run the engine
-    setInterval(() => {
+    let interval = setInterval(() => {
+      if (Date.now() - startTime > duration) {
+        clearInterval(interval);
+        console.log("Physics run ended");
+      }
+
       Engine.update(this.engine, 1000 / 30);
       console.log(this.objects[0].position, this.objects[0].angle);
 

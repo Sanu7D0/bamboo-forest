@@ -20,8 +20,8 @@
       // socket = io.connect('http://x.x.x.x:80');
       const socket = io();
 
-      socket.on("data-objects", (obj) => {
-        let a = JSON.parse(obj[0]);
+      socket.on("data-objects", (...args) => {
+        let a = JSON.parse(args[0]);
         console.log(a);
       });
 
@@ -44,7 +44,7 @@
           obj = {
             data: voiceString,
           };
-          socket.emit("data-voice", obj);
+          socket.emit("test-data", obj);
         }
       }
     </script>

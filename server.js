@@ -11,23 +11,23 @@ const io = new Server(server);
 const __dirname = path.resolve();
 const PORT = 3000;
 
-/*const express = require("express");
-const app = express();
-const server = require("http").createServer(app);
-const io = require("socket.io")(server);*/
+const textHole = new TextHole();
 
 app.use(express.static(__dirname + "/public"));
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
+app.get("/test", (req, res) => {
+  res.sendFile(__dirname + "/public/index_test.html");
+});
 
 io.on("connection", (socket) => {
   console.log(`Socket connected: ${socket.id}`);
   socket.join("main_room");
 
-  socket.on("test-data", (obj) => {
-    console.log(obj.str);
+  socket.on("data-voice", (obj) => {
+    onVoiceData(obj);
   });
 
   socket.on("forceDisconnect", () => {
@@ -48,7 +48,9 @@ function emitObjectsInfo(obj) {
   io.to("main_room").emit("data-objects", obj);
 }
 
-let th = new TextHole();
-th.test();
+function onVoiceData(obj) {
+  textHole.createTextObject(obj.data, 200, 100);
+  textHole.runPhysics(3000); // run physics for 3 sec
+}
 
 export { emitObjectsInfo };
