@@ -10,6 +10,9 @@ const {
   workerData,
 } = require("worker_threads");*/
 
+const WIDTH = 400,
+  HEIGHT = 600;
+
 export default class TextHole {
   constructor() {
     this.objects = [];
@@ -17,7 +20,9 @@ export default class TextHole {
 
     this.engine = Engine.create();
 
-    this.ground = Bodies.rectangle(400, 610, 810, 100, { isStatic: true });
+    this.ground = Bodies.rectangle(WIDTH / 2, HEIGHT, WIDTH, 100, {
+      isStatic: true,
+    });
   }
 
   get objectsJsonArray() {
@@ -35,7 +40,7 @@ export default class TextHole {
 
   createTextObject(_text, x, y) {
     // TODO: width, height 지정
-    let textObject = Bodies.rectangle(x, y, 80, 80);
+    let textObject = Bodies.rectangle(x, y, 40, 40);
     textObject.text = _text;
     this.objects.push(textObject);
     this.objectsInfo.push({
@@ -61,12 +66,11 @@ export default class TextHole {
         console.log("Physics run ended");
       }
 
-      Engine.update(this.engine, 1000 / 30);
-      console.log(this.objects[0].position, this.objects[0].angle);
+      Engine.update(this.engine, 1000 / 60);
 
       // update and emit info
       this.updateObjectsInfo();
       emitObjectsInfo(this.objectsJsonArray);
-    }, 1000 / 30);
+    }, 1000 / 60);
   }
 }

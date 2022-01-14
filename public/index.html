@@ -7,13 +7,14 @@
     <title>Bamboo Forest</title>
 
     <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
     <!-- 여기에 element 추가 -->
     <button>녹음 기능을 여기에</button>
     <button>녹음 종료 및 데이터 보내기</button>
 
-    <canvas id="canvas-main" width="400" height="600"></canvas>
+    <canvas id="canvas-main" width="400px" height="600px"></canvas>
     <script type="text/javascript">
       const canvas = document.getElementById("canvas-main");
       const ctx = canvas.getContext("2d");
@@ -21,20 +22,35 @@
       const socket = io();
 
       socket.on("data-objects", (obj) => {
-        let a = JSON.parse(obj[0]);
-        console.log(a);
+        let objects = JSON.parse(obj);
+        render(objects);
       });
 
       // 데이터로 캔버스를 그림
-      function renderCanvas() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      function render(objects) {
+        console.log(`Rendering ${objects.length} objects`);
 
-        // 그리기
-      }
+        ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
-      // 목소리를 텍스트로 변환, 리턴
-      function voiceToString() {
-        return "";
+        ctx.fillStyle = "red";
+        for (let idx in objects) {
+          let x = objects[idx].x,
+            y = objects[idx].y;
+
+          // TODO: width, height 적용
+          let w = 40,
+            h = 40;
+
+          ctx.save(); // save ctx properties
+
+          // 회전
+          ctx.translate(x + w / 2, y + h / 2);
+          ctx.rotate(objects[idx].angle);
+
+          ctx.fillRect(-w / 2, -h / 2, w, h);
+
+          ctx.restore(); // restore ctx properties
+        }
       }
 
       // 목소리 텍스트를 서버로 전송
