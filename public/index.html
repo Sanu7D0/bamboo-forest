@@ -5,21 +5,56 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bamboo Forest</title>
-
+    <style type="text/css"></style>
+    <!-- <script src="/libraries/***"></script> -->
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
     <canvas id="canvas-main" width="400" height="600"></canvas>
+    <button id="record_button" onclick="record_button_click();">녹음 시작</button>
+    <!-- <button id="record_button" onclick="stop_button_click();">녹음 중지</button> -->
+    <script src='annyang.js'></script>
     <script type="text/javascript">
       const canvas = document.getElementById("canvas-main");
       const ctx = canvas.getContext("2d");
-      // socket = io.connect('http://x.x.x.x:80');
       const socket = io("/main-namespace");
+      const btn =document.getElementById('record_button');
+
+      //////
+      
+      //////
+
+      function record_button_click() {
+        annyang.start({autoRestart: false, continuous: true})
+        var recognition = annyang.getSpeechRecognizer();
+        var final_transcript= "";
+        recognition.interimResults = true;
+        recognition.onresult = function(event) {
+          var interim_transcript = "";
+          final_transcript = "";
+          for (var i = event.resultIndex; i<event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+              final_transcript +=event.results[i][0].transcript;
+              console.log("final_transcript= "+final_transcript);
+              sendVoiceData(final_transcript);
+              //annyang.trigger(final_transcript);
+              //If the sentence is "final" for the Web Speech API, we can try to trigger the sentence
+            } else {
+              interim_transcript += event.results[i][0].transcript;
+              console.log("interim_transcript= "+interim_transcript);
+            }
+          }
+          annyang.abort();
+          alert("음성 인식이 완료되었습니다.");
+        }
+        //recordStart()
+      }
+      
+        
 
       // 데이터로 캔버스를 그림
       function renderCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         // 그리기
       }
 

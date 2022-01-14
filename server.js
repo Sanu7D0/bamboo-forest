@@ -16,7 +16,7 @@ nsp_main.on("connection", (socket) => {
   console.log(`Socket connected: ${socket.id}`);
 
   socket.on("test-data", (obj) => {
-    console.log(obj.str);
+    console.log(obj.data);
   });
 
   socket.on("forceDisconnect", () => {
