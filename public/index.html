@@ -5,28 +5,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bamboo Forest</title>
-    <style type="text/css"></style>
-    <!-- <script src="/libraries/***"></script> -->
     <script src="/socket.io/socket.io.js"></script>
+    <script src="./libraries/annyang.js"></script>
+    <script src="./libraries/matter.js"></script>
+    <script src="bascket.js"></script>
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <!-- 여기에 element 추가 -->
-
-    <canvas id="canvas-main" width="400px" height="600px"></canvas>
     <button id="record_button" onclick="record_button_click();">
       녹음 시작
     </button>
-    <!-- <button id="record_button" onclick="stop_button_click();">녹음 중지</button> -->
-    <script src="annyang.js"></script>
+    <canvas id="main-canvas"></canvas>
     <script type="text/javascript">
-      const canvas = document.getElementById("canvas-main");
-      const ctx = canvas.getContext("2d");
-
       // socket = io.connect('http://x.x.x.x:80');
       const socket = io();
 
       const btn = document.getElementById("record_button");
+
+      const canvas = document.getElementById("main-canvas");
+      const ctx = canvas.getContext("2d");
+      const bascket = Bascket.context(canvas, ctx);
+      bascket.render();
 
       function record_button_click() {
         annyang.start({ autoRestart: false, continuous: true });
@@ -53,22 +52,19 @@
 
       }
 
-      socket.on("data-objects", (obj) => {
-        let objects = JSON.parse(obj);
-        renderCanvas(objects);
+      socket.on("data-start", (obj) => {
+        console.log(obj);
       });
 
-      // 데이터로 캔버스를 그림
-      function renderCanvas() {}
+      socket.on("data-text", (obj) => {
+        console.log(obj);
+        bascket.addText(obj);
+      });
 
       // 목소리 텍스트를 서버로 전송
-      function sendVoiceData(voiceString) {
-        if (voiceString) {
-          let obj = {};
-          obj = {
-            data: voiceString,
-          };
-          socket.emit("data-voice", obj);
+      function sendVoiceData(voiceText) {
+        if (voiceText !== "") {
+          socket.emit("data-voice", voiceText);
         }
       }
     </script>

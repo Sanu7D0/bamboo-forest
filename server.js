@@ -2,7 +2,7 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import path from "path";
-import TextHole from "./src/TextHole.js";
+import TextContainer from "./src/TextContainer.js";
 
 const app = express();
 const server = createServer(app);
@@ -11,7 +11,7 @@ const io = new Server(server);
 const __dirname = path.resolve();
 const PORT = 3000;
 
-const textHole = new TextHole();
+const textContainer = new TextContainer();
 
 app.use(express.static(__dirname + "/public"));
 
@@ -24,10 +24,11 @@ app.get("/test", (req, res) => {
 
 io.on("connection", (socket) => {
   console.log(`Socket connected: ${socket.id}`);
-  socket.join("main_room");
+  socket.join("main-room");
 
-  socket.on("data-voice", (obj) => {
-    onVoiceData(obj);
+  socket.on("data-voice", (text) => {
+    textContainer.onVoiceData(text);
+    io.to("main-room").emit("data-text", text);
   });
 
   socket.on("forceDisconnect", () => {
@@ -43,14 +44,3 @@ io.on("connection", (socket) => {
 server.listen(PORT, () => {
   console.log(`Socket IO server listening on port ${PORT}`);
 });
-
-function emitObjectsInfo(obj) {
-  io.to("main_room").emit("data-objects", obj);
-}
-
-function onVoiceData(obj) {
-  textHole.createTextObject(obj.data, 200, 100);
-  textHole.runPhysics(3000); // run physics for 3 sec
-}
-
-export { emitObjectsInfo };
