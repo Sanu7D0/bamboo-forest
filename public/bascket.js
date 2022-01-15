@@ -57,6 +57,12 @@ Bascket.context = function (canvas, ctx) {
     Bodies.rectangle(100, 10, 50, 50, {
       text: "실",
     }),
+    Bodies.rectangle(10, 10, 50, 50, {
+      text: "실",
+    }),
+    Bodies.rectangle(300, 10, 50, 50, {
+      text: "실",
+    }),
   ]);
 
   // let scale = 1.0;
@@ -91,29 +97,33 @@ Bascket.context = function (canvas, ctx) {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    /*ctx.beginPath();
-    
+    // 테스트 윤곽선
+    // TEST -----
+    ctx.beginPath();
     for (var i = 0; i < bodies.length; i += 1) {
       var vertices = bodies[i].vertices;
-      
+
       ctx.moveTo(vertices[0].x, vertices[0].y);
-      
+
       for (var j = 1; j < vertices.length; j += 1) {
         ctx.lineTo(vertices[j].x, vertices[j].y);
       }
-      
+
       ctx.lineTo(vertices[0].x, vertices[0].y);
     }
-    
+
     ctx.lineWidth = 1;
     ctx.strokeStyle = "#999";
-    ctx.stroke();*/
+    ctx.stroke();
+    // ----- TEST
 
     // TODO: width, height 지정하기
-    const w = 40,
-      h = 40;
+    const w = 50,
+      h = 50;
 
-    ctx.font = "40px serif";
+    ctx.font = `${w}px BMDOHYEON`;
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
     ctx.fillStyle = "black";
 
     for (let i = 0; i < bodies.length; i++) {
@@ -124,13 +134,21 @@ Bascket.context = function (canvas, ctx) {
       ctx.save(); // save ctx properties
 
       // 회전
-      ctx.translate(x + w / 2, y + h / 2);
+      ctx.translate(x, y);
       ctx.rotate(b.angle);
 
-      // ctx.fillRect(-w / 2, -h / 2, w, h);
-      ctx.fillText(b.text, -w / 2, -h / 2);
+      ctx.fillText(b.text, 0, 5); // y 보정 (baseline이 안 맞는다)
 
       ctx.restore(); // restore ctx properties
+
+      // TEST -----
+      /*ctx.save();
+      ctx.fillStyle = "red";
+      ctx.beginPath();
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();*/
+      // ----- TEST
     }
   }
 
