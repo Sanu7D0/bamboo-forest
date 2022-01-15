@@ -30,28 +30,27 @@
 
       function record_button_click() {
         annyang.start({ autoRestart: false, continuous: true });
-        var recognition = annyang.getSpeechRecognizer();
-        var final_transcript = "";
-        recognition.interimResults = true;
+        let recognition = new annyang.getSpeechRecognizer();
+        let final_transcript = "";
+        recognition.interimResults = false;
         recognition.onresult = function (event) {
-          var interim_transcript = "";
-          final_transcript = "";
+          let interim_transcript = "";
           for (var i = event.resultIndex; i < event.results.length; ++i) {
             if (event.results[i].isFinal) {
               final_transcript += event.results[i][0].transcript;
-              console.log("final_transcript= " + final_transcript);
-              sendVoiceData(final_transcript);
-              //annyang.trigger(final_transcript);
-              //If the sentence is "final" for the Web Speech API, we can try to trigger the sentence
+              //annyang.trigger(final_transcript); //If the sentence is "final" for the Web Speech API, we can try to trigger the sentence
             } else {
               interim_transcript += event.results[i][0].transcript;
-              console.log("interim_transcript= " + interim_transcript);
+              console.log("interim_transcript="+interim_transcript);
             }
           }
+          //for문 중인데 왜??
+          console.log("final_transcript= " + final_transcript);
+          sendVoiceData(final_transcript);
           annyang.abort();
           alert("음성 인식이 완료되었습니다.");
         };
-        //recordStart()
+
       }
 
       socket.on("data-objects", (obj) => {
