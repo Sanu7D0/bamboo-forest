@@ -1,10 +1,12 @@
+const MAX_TEXT = 10;
+
 export default class TextContainer {
   constructor() {
-    this.texts = [];
+    this.textsQueue = [];
   }
 
   get textsJson() {
-    return JSON.stringify(this.texts);
+    return JSON.stringify(this.textsQueue);
   }
 
   onVoiceData(voiceText) {
@@ -12,13 +14,12 @@ export default class TextContainer {
   }
 
   addText(text) {
-    for (const char of text) {
-      this.texts.push(char);
+    if (this.textsQueue.length >= MAX_TEXT) {
+      this.textsQueue.shift();
     }
-    console.log(`Received: ${text}, total: ${this.texts.length}`);
-  }
 
-  clearTexts() {
-    this.texts = [];
+    this.textsQueue.push(text);
+
+    console.log(`Received: ${text}`);
   }
 }

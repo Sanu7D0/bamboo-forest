@@ -25,6 +25,8 @@ app.get("/test", (req, res) => {
 io.on("connection", (socket) => {
   console.log(`Socket connected: ${socket.id}`);
   socket.join("main-room");
+  // 새로 접속 시 textContainer에 저장된 텍스트들 방출
+  io.to(socket.id).emit("data-start", textContainer.textsJson);
 
   socket.on("data-voice", (text) => {
     textContainer.onVoiceData(text);
@@ -33,7 +35,6 @@ io.on("connection", (socket) => {
 
   socket.on("forceDisconnect", () => {
     socket.disconnect();
-    f;
   });
 
   socket.on("disconnect", () => {
