@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bamboo Forest</title>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="libraries/matter.js"></script>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <!-- 여기에 element 추가 -->
+    <button>녹음 기능을 여기에</button>
+    <button>녹음 종료 및 데이터 보내기</button>
+
+    <!-- <canvas id="canvas-main" width="400px" height="600px"></canvas> -->
+    <script type="text/javascript">
+      //const canvas = document.getElementById("canvas-main");
+      //const ctx = canvas.getContext("2d");
+      // socket = io.connect('http://x.x.x.x:80');
+      const socket = io();
+
+      socket.on("data-objects", (obj) => {
+        let objects = JSON.parse(obj);
+        renderCanvas(objects);
+      });
+
+      // Matter-js
+      const Engine = Matter.Engine,
+        Render = Matter.Render,
+        Runner = Matter.Runner,
+        Bodies = Matter.Bodies,
+        Composite = Matter.Composite;
+
+      let engine = Engine.create(),
+        world = engine.world;
+
+      let render = Render.create({
+        element: document.body,
+        engine: engine,
+        options: {
+          width: 600,
+          height: 800,
+          showAngleIndicator: true,
+          showCollisions: true,
+        },
+      });
+      Render.run(render);
+
+      var runner = Runner.create({
+        delta: 1000 / 60,
+        isFixed: false,
+        enabled: true,
+      });
+
+      let boxA = Bodies.rectangle(400, 200, 80, 80);
+      let boxB = Bodies.rectangle(450, 50, 80, 80);
+      let ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
+      let objects = [];
+      objects.push(boxA);
+      objects.push(boxB);
+      objects.push(ground);
+
+      // add all of the bodies to the world
+      Composite.add(world, objects);
+
+      console.log("A");
+      // run the engine
+      Runner.run(runner, engine);
+      console.log("B");
+      let boxC = Bodies.rectangle(450, 50, 80, 80);
+      //objects.push(boxC);
+      Composite.add(world, boxC);
+
+      // 데이터로 캔버스를 그림
+      function renderCanvas(objects) {
+        console.log(`Rendering ${objects.length} objects`);
+
+        ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+        // random color
+        ctx.fillStyle = "red";
+        for (let idx in objects) {
+          let x = objects[idx].x,
+            y = objects[idx].y;
+
+          // TODO: width, height 적용
+          let w = 40,
+            h = 40;
+
+          ctx.save(); // save ctx properties
+
+          // 회전
+          ctx.translate(x + w / 2, y + h / 2);
+          ctx.rotate(objects[idx].angle);
+
+          ctx.fillRect(-w / 2, -h / 2, w, h);
+
+          ctx.restore(); // restore ctx properties
+        }
+      }
+
+      // 목소리 텍스트를 서버로 전송
+      function sendVoiceData(voiceString) {
+        if (voiceString) {
+          let obj = {};
+          obj = {
+            data: voiceString,
+          };
+          socket.emit("data-voice", obj);
+        }
+      }
+    </script>
+  </body>
+</html>
