@@ -13,7 +13,11 @@ Bascket.context = function (canvas, ctx) {
     MouseConstraint = Matter.MouseConstraint,
     Mouse = Matter.Mouse,
     Composite = Matter.Composite,
-    Bodies = Matter.Bodies;
+    Bodies = Matter.Bodies,
+    Body = Matter.Body,
+    Vector = Matter.Vector;
+
+  const timer = (ms) => new Promise((res) => setTimeout(res, ms));
 
   // create engine
   let engine = Engine.create(),
@@ -26,28 +30,44 @@ Bascket.context = function (canvas, ctx) {
   canvas.width = CANVAS_WIDTH;
   canvas.height = CANVAS_HEIGHT;
 
-  const charWidth = 35,
-    charHeight = 35;
-
   Composite.add(world, [
     // walls
-    Bodies.rectangle(CANVAS_WIDTH / 2, CANVAS_HEIGHT, CANVAS_WIDTH, 50, {
+    Bodies.rectangle(0, CANVAS_HEIGHT / 2, CANVAS_HEIGHT, 1, {
       isStatic: true,
       text: "",
+      angle: Math.PI / 2,
+      restitution: 1,
+      friction: 0,
+      slop: 0,
     }),
-    Bodies.rectangle(CANVAS_WIDTH, CANVAS_HEIGHT - 200, 500, 50, {
+    Bodies.rectangle(CANVAS_WIDTH, CANVAS_HEIGHT / 2, CANVAS_HEIGHT, 1, {
       isStatic: true,
       text: "",
-      angle: -Math.PI / 3,
+      angle: Math.PI / 2,
+      restitution: 1,
+      friction: 0,
+      slop: 0,
     }),
-    Bodies.rectangle(0, CANVAS_HEIGHT - 200, 500, 50, {
+    Bodies.rectangle(CANVAS_WIDTH / 2, 0, CANVAS_WIDTH, 1, {
       isStatic: true,
       text: "",
-      angle: Math.PI / 3,
+      restitution: 1,
+      friction: 0,
+      slop: 0,
+    }),
+    Bodies.rectangle(CANVAS_WIDTH / 2, CANVAS_HEIGHT, CANVAS_WIDTH, 1, {
+      isStatic: true,
+      text: "",
+      restitution: 1,
+      friction: 0,
+      slop: 0,
     }),
   ]);
 
-  // addText("치타는 웃으면서 달리지만 배가 고프다 그래서 달린다 지구 끝까지");
+  // 중력 0
+  engine.gravity.y = 0;
+
+  // Test
 
   // add mouse control
   /*var mouse = Mouse.create(render.canvas),
@@ -93,7 +113,6 @@ Bascket.context = function (canvas, ctx) {
       ctx.stroke();
     }
 
-    ctx.font = `${charWidth}px BMDOHYEON`;
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
     ctx.fillStyle = "black";
@@ -109,54 +128,102 @@ Bascket.context = function (canvas, ctx) {
       ctx.translate(x, y);
       ctx.rotate(b.angle);
 
-      ctx.fillText(b.text, 0, 3); // y 보정 (baseline이 안 맞는다)
+      ctx.font = `${30 * b.scale}px BMDOHYEON`;
+      ctx.fillText(b.text, 0, 3 * b.scale); // y 보정 (baseline이 안 맞는다)
 
       ctx.restore(); // restore ctx properties
     }
   }
 
-  function addText(text, randomGap = false) {
-    let xBase = 0,
-      yBase = 50,
-      gap = 15;
+  async function addText(text, scale) {
+    const vector = getRandomVector();
+
+    // TODO: 왼쪽에서 오면 글자 순서 반대로임...
+
     for (let i = 0; i < text.length; i++) {
+      let waitTime = 50 * scale;
       if (text.charAt(i) === " " || text.charAt(i) === "") {
-        // space, null 이면 스킵
-        xBase += gap * 1.5;
+        // space, null 이면 더 오래 기다리기
+        waitTime = 100;
         continue;
       } else {
-        xBase += gap * (randomGap ? getRandom(0.5, 1.5) : 1) + charWidth;
+        const mass = 1 * scale;
+        const radius = 20 * scale;
+        const f = vector.from,
+          t = vector.to;
+        const angle = Math.atan((t.y - f.y) / (t.x - f.x));
+        const speed = 7;
+
+        // TODO: 바운더리 안에서 소환하기
+
+        let b = Bodies.circle(f.x, f.y, radius, {
+          frictionAir: 0,
+          friction: 0,
+          restitution: 1,
+          slop: 0,
+          mass: mass,
+          inverseMass: 1 / mass,
+          angle: angle,
+          text: text.charAt(i),
+          scale: scale,
+        });
+
+        Body.setVelocity(
+          b,
+          Vector.mult(
+            Vector.normalise(Vector.create(t.x - f.x, t.y - f.y)),
+            speed
+          )
+        );
+
+        Composite.add(world, b);
       }
 
-      // 캔버스 가로 넘어가면 다음 줄
-      if (xBase + charWidth >= CANVAS_WIDTH) {
-        xBase = gap * (randomGap ? getRandom(0.5, 1.5) : 1) + charWidth;
-        yBase += gap + charHeight;
-      }
-
-      let bodyWidth;
-      // 알파벳 체크
-      if (text.toUpperCase() != text.toLowerCase()) {
-        bodyWidth = charWidth - 10;
-      } else {
-        bodyWidth = charWidth;
-      }
-
-      Composite.add(
-        world,
-        // 폰트에 따라 박스 width, height 보정
-        Bodies.rectangle(
-          xBase,
-          yBase + getRandom(-5, 5),
-          bodyWidth - 3,
-          charHeight - 3,
-          {
-            text: text.charAt(i),
-            angle: getRandom(-Math.PI / 2, Math.PI / 2),
-          }
-        )
-      );
+      await timer(100);
     }
+  }
+
+  function getRandomVector() {
+    // from = 캔버스 경계 위 임의의 점
+    // to = 중앙에서 특정 반지름을 가진 원 안 임의의 점
+
+    let f = [0, 0];
+    const randomLength = getRandom(0, 2 * CANVAS_WIDTH + 2 * CANVAS_HEIGHT);
+    if (0 <= randomLength && randomLength < CANVAS_WIDTH) {
+      f[0] = randomLength;
+    } else if (
+      CANVAS_WIDTH <= randomLength &&
+      randomLength < CANVAS_WIDTH + CANVAS_HEIGHT
+    ) {
+      f[0] = CANVAS_WIDTH;
+      f[1] = randomLength - CANVAS_WIDTH;
+    } else if (
+      CANVAS_WIDTH + CANVAS_HEIGHT <= randomLength &&
+      randomLength < 2 * CANVAS_WIDTH + CANVAS_HEIGHT
+    ) {
+      f[0] = CANVAS_WIDTH - (randomLength - (CANVAS_WIDTH + CANVAS_HEIGHT));
+      f[1] = CANVAS_HEIGHT;
+    } else {
+      f[1] =
+        CANVAS_HEIGHT - (randomLength - (2 * CANVAS_WIDTH + CANVAS_HEIGHT));
+    }
+
+    let t = [0, 0];
+    const maxRadius = Math.min(CANVAS_WIDTH, CANVAS_HEIGHT) / 3;
+    const radius = getRandom(0, maxRadius);
+    t[0] = CANVAS_WIDTH / 2 + radius * Math.sin(getRandom(0, 2 * Math.PI));
+    t[1] = CANVAS_HEIGHT / 2 + radius * Math.cos(getRandom(0, 2 * Math.PI));
+
+    return {
+      from: {
+        x: f[0],
+        y: f[1],
+      },
+      to: {
+        x: t[0],
+        y: t[1],
+      },
+    };
   }
 
   function getRandom(min, max) {
