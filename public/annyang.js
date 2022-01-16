@@ -561,7 +561,7 @@
         recognition.abort();
       }
 
-      // initiate SpeechRecognition
+      // initiate SpeechReognition
       recognition = new SpeechRecognition();
 
       // Set the max number of alternative transcripts to try and match with a command
