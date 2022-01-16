@@ -5,11 +5,15 @@
 }*/
 
 canvas {
-  margin: 0 auto;
+  margin: 0;
   display: block;
   /* width: 100%; */
   /* height: 100%; */
   border: 1px solid black;
+}
+
+body {
+  background-color: skyblue;
 }
 
 @font-face {
@@ -38,4 +42,18 @@ canvas {
 @font-face {
   font-family: "GUNGSEO";
   src: url("./fonts/gungseo.ttf") format("truetype");
+}
+
+button {
+  background-color: black;
+  border: none;
+  color: white;
+  padding: 15px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 10px;
 }
