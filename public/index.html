@@ -15,7 +15,10 @@
     <button id="record_button" onclick="record_button_click();">
       녹음 시작
     </button>
-    <canvas id="main-canvas"></canvas>
+    <div id="containers">
+      <canvas id="main-canvas"></canvas>
+      <button position="absolute">TEST</button>
+    </div>
     <script type="text/javascript">
       // socket = io.connect('http://x.x.x.x:80');
       const socket = io();
@@ -59,14 +62,14 @@
         let textArr = JSON.parse(obj);
         if (textArr.length > 0) {
           for (idx in textArr) {
-            bascket.addText(textArr[idx]);
+            bascket.addText(textArr[idx], getRandom(1, 2));
           }
         }
       });
 
       socket.on("data-text", (obj) => {
         console.log("Received text data");
-        bascket.addText(obj);
+        bascket.addText(obj, getRandom(1, 2));
       });
 
       // 목소리 텍스트를 서버로 전송
@@ -74,6 +77,11 @@
         if (voiceText !== "") {
           socket.emit("data-voice", voiceText);
         }
+      }
+
+      // 테스트용
+      function getRandom(min, max) {
+        return Math.random() * (max - min) + min;
       }
     </script>
   </body>
