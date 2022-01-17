@@ -2,7 +2,16 @@ var Bascket = Bascket || {};
 
 let DEBUG_MODE = false;
 
-const COLORS = ["#220C10", "#506C64", "#75CBB9", "#75B8C8"];
+const COLORS = [
+  "#004b23",
+  "#006400",
+  "#007200",
+  "#008000",
+  "#38b000",
+  "#70e000",
+  "#9ef01a",
+  "#ccff33",
+];
 
 Bascket.context = function (canvas, ctx) {
   const Engine = Matter.Engine,
@@ -174,12 +183,12 @@ Bascket.context = function (canvas, ctx) {
     }
 
     for (let i = 0; i < text.length; i++) {
-      let waitTime = 50 * scale;
+      let waitTime = 100 * scale;
       let char = textArray[i];
 
       if (char === " " || char === "") {
         // space, null 이면 더 오래 기다리기
-        waitTime = 100;
+        waitTime += 50;
         continue;
       } else {
         const mass = 1 * scale;
@@ -215,9 +224,19 @@ Bascket.context = function (canvas, ctx) {
         );
 
         Composite.add(world, b);
+
+        // 소리 재생
+        try {
+          let popSound = new Audio("popSound.wav");
+          // popSound.muted = true;
+          window.focus();
+          popSound.play();
+        } catch (e) {
+          console.log(e);
+        }
       }
 
-      await timer(100);
+      await timer(waitTime);
     }
   }
 

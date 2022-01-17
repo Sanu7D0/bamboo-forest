@@ -14,7 +14,7 @@ canvas {
 
 body {
   background-image: "bamboo_r.jpg";
-  background-color: #cdd3d5;
+  /* background-color: #cdd3d5; */
 }
 
 @font-face {
@@ -77,4 +77,3 @@ body {
   left: 20px;
   bottom: 30%;
 }
-
