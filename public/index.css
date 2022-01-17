@@ -31,7 +31,8 @@ body {
   border-radius: 25%;
   position: fixed;
   top: 35%;
-  left: 20px;
+  left: 3%;
+  transform: translate(-50%, -50%);
 }
 
 #github_button {
@@ -42,7 +43,8 @@ body {
   border-radius: 25%;
   position: fixed;
   top: 50%;
-  left: 20px;
+  left: 3%;
+  transform: translate(-50%, -50%);
 }
 
 #instagram_button {
@@ -52,6 +54,14 @@ body {
   cursor: pointer;
   border-radius: 25%;
   position: fixed;
-  left: 20px;
+  left: 3%;
   top: 65%;
+  transform: translate(-50%, -50%);
+}
+
+#logo {
+  position: fixed;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
