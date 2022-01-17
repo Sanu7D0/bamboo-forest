@@ -1,6 +1,6 @@
 var Bascket = Bascket || {};
 
-const DEBUG_MODE = false;
+let DEBUG_MODE = false;
 
 const CANVAS_WIDTH = 1200,
   CANVAS_HEIGHT = 800;
@@ -38,7 +38,7 @@ Bascket.context = function (canvas, ctx) {
       angle: Math.PI / 2,
       restitution: 1,
       friction: 0,
-      slop: 0,
+      frictionStatic: 0,
     }),
     Bodies.rectangle(CANVAS_WIDTH, CANVAS_HEIGHT / 2, CANVAS_HEIGHT, 1, {
       isStatic: true,
@@ -46,21 +46,21 @@ Bascket.context = function (canvas, ctx) {
       angle: Math.PI / 2,
       restitution: 1,
       friction: 0,
-      slop: 0,
+      frictionStatic: 0,
     }),
     Bodies.rectangle(CANVAS_WIDTH / 2, 0, CANVAS_WIDTH, 1, {
       isStatic: true,
       text: "",
       restitution: 1,
       friction: 0,
-      slop: 0,
+      frictionStatic: 0,
     }),
     Bodies.rectangle(CANVAS_WIDTH / 2, CANVAS_HEIGHT, CANVAS_WIDTH, 1, {
       isStatic: true,
       text: "",
       restitution: 1,
       friction: 0,
-      slop: 0,
+      frictionStatic: 0,
     }),
   ]);
 
@@ -135,20 +135,29 @@ Bascket.context = function (canvas, ctx) {
     }
   }
 
-  async function addText(text, scale) {
-    const vector = getRandomVector();
+  async function addText(obj, scale) {
+    let _id = obj.id,
+      text = obj.text;
 
-    // TODO: 왼쪽에서 오면 글자 순서 반대로임...
+    const vector = getRandomVector();
+    const textArray = text.split("");
+
+    // 왼쪽에서 오면 글자 순서 반대로
+    if (vector.from.x < CANVAS_WIDTH / 2) {
+      textArray.reverse();
+    }
 
     for (let i = 0; i < text.length; i++) {
       let waitTime = 50 * scale;
-      if (text.charAt(i) === " " || text.charAt(i) === "") {
+      let char = textArray[i];
+
+      if (char === " " || char === "") {
         // space, null 이면 더 오래 기다리기
         waitTime = 100;
         continue;
       } else {
         const mass = 1 * scale;
-        const radius = 20 * scale;
+        const radius = 17 * scale;
         const f = vector.from,
           t = vector.to;
         const angle = Math.atan((t.y - f.y) / (t.x - f.x));
@@ -157,14 +166,16 @@ Bascket.context = function (canvas, ctx) {
         // TODO: 바운더리 안에서 소환하기
 
         let b = Bodies.circle(f.x, f.y, radius, {
+          id: _id,
           frictionAir: 0,
           friction: 0,
           restitution: 1,
-          slop: 0,
           mass: mass,
           inverseMass: 1 / mass,
           angle: angle,
-          text: text.charAt(i),
+          inertia: Infinity,
+          inverseInertia: 0,
+          text: char,
           scale: scale,
         });
 
@@ -180,6 +191,17 @@ Bascket.context = function (canvas, ctx) {
       }
 
       await timer(100);
+    }
+  }
+
+  function deleteText(_id) {
+    let bodies = world.bodies;
+
+    // pop 하면 index 줄어들기 때문에 뒤에서 부터 순회
+    for (let i = bodies.length - 1; i >= 0; i--) {
+      if (bodies[i].id === _id) {
+        bodies.splice(i, 1);
+      }
     }
   }
 
@@ -230,6 +252,10 @@ Bascket.context = function (canvas, ctx) {
     return Math.random() * (max - min) + min;
   }
 
+  function setDebugMode(bool) {
+    DEBUG_MODE = bool;
+  }
+
   // context for Bascket
   return {
     engine: engine,
@@ -241,6 +267,8 @@ Bascket.context = function (canvas, ctx) {
       Matter.Runner.stop(runner);
     },
     addText: addText,
+    deleteText: deleteText,
+    setDebugMode: setDebugMode,
   };
 };
 

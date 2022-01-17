@@ -1,3 +1,5 @@
+import { deleteOldestText } from "../server.js";
+
 const MAX_TEXT = 10;
 
 export default class TextContainer {
@@ -9,17 +11,18 @@ export default class TextContainer {
     return JSON.stringify(this.textsQueue);
   }
 
-  onVoiceData(voiceText) {
-    this.addText(voiceText);
-  }
-
-  addText(text) {
+  addText(obj) {
     if (this.textsQueue.length >= MAX_TEXT) {
-      this.textsQueue.shift();
+      let oldId = this.textsQueue.shift().id;
+      deleteOldestText(oldId);
+      console.log(`Deleted: ${oldId} / ${this.textsQueue.length}`);
     }
 
-    this.textsQueue.push(text);
+    this.textsQueue.push({
+      text: obj.text,
+      id: obj.id,
+    });
 
-    console.log(`Received: ${text}`);
+    console.log(`Received: ${obj.text} / ${this.textsQueue.length}`);
   }
 }
