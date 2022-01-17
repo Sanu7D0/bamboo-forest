@@ -46,32 +46,35 @@ body {
 }
 
 #record_button {
-  background-color: lightgreen;
+  background-color: transparent;
   padding: 8px 10px;
   display: inline-block;
   cursor: pointer;
-  border-radius: 50%;
-  position: absolute;
-  top: 0;
+  border-radius: 25%;
+  position: fixed;
+  top: 25%;
+  left: 20px;
 }
 
 #github_button {
-  background-color: lightgreen;
+  background-color: transparent;
   padding: 8px 10px;
   display: inline-block;
   cursor: pointer;
-  border-radius: 50%;
-  position: absolute;
-  bottom: 0;
+  border-radius: 25%;
+  position: fixed;
+  bottom: 50%;
+  left: 20px;
 }
 
 #instagram_button {
-  background-color: lightgreen;
+  background-color: transparent;
   padding: 8px 10px;
   display: inline-block;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: 25%;
   position: absolute;
-  right: 0;
-  bottom: 0;
+  left: 20px;
+  bottom: 30%;
 }
+
