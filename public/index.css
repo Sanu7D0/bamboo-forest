@@ -10,12 +10,11 @@ canvas {
   border: 1px solid black;
   width: 100%;
   height: 100%;
-  
 }
 
 body {
   background-image: "bamboo_r.jpg";
-  background-color: lightgreen;
+  background-color: #cdd3d5;
 }
 
 @font-face {
@@ -45,7 +44,6 @@ body {
   font-family: "GUNGSEO";
   src: url("./fonts/gungseo.ttf") format("truetype");
 }
-
 
 #record_button {
   background-color: lightgreen;

@@ -99,7 +99,7 @@
 
       socket.on("data-text", (obj) => {
         console.log("Received text data");
-        bascket.addText(obj, getRandom(1, 2));
+        bascket.addText(obj, getRandom(1, 1.5));
       });
 
       socket.on("data-delete", (id) => {
