@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html style="height:100%" lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -11,13 +11,24 @@
     <script src="bascket.js"></script>
     <link rel="stylesheet" href="index.css" />
   </head>
-  <body>
-    <button id="record_button" onclick="record_button_click();">
-      녹음 시작
+  <body style="height: 100%; width: 100%; padding: 0; margin: 0;">
     </button>
-    <div id="containers">
-      <canvas id="main-canvas"></canvas>
-      <button position="absolute">TEST</button>
+    <div id="container">
+      <canvas id="main-canvas">
+      </canvas>
+
+      <button type="button" id="record_button" onclick="record_button_click();">
+      <img src="microphone.png" height="40" width="40">
+      </button>
+
+      <button type="button" id="github_button" onclick="window.open('https://github.com/Sanu7D0/bamboo-forest')">
+      <img src="github.png" height="40" width="40">
+      </button>
+
+      <button type="button" id="instagram_button" onclick="window.open('https://www.instagram.com/rdo.xrl')">
+      <img src="instagram.png" height="40" width="40">
+      </button>
+
     </div>
     <script type="text/javascript">
       // socket = io.connect('http://x.x.x.x:80');
@@ -28,6 +39,25 @@
       const canvas = document.getElementById("main-canvas");
       const ctx = canvas.getContext("2d");
       const bascket = Bascket.context(canvas, ctx);
+
+
+      
+
+      //var img = new Image();
+      //img.onload = function(){
+      //  ctx.drawImage(img, 60, 60, 80, 80);
+      //}
+      //img.src = "voice.png";    
+
+      //canvas.onclick = function(event) {
+      //  const x = event.layerX;
+      //  const y = event.layerY;
+      //  console.log(x + " and " + y);
+      //  if ((x<120 && x>80) && (y<270 && y>230)) {
+      //    record_button_click();
+      //  }
+      //}
+
       bascket.render();
 
       function record_button_click() {
