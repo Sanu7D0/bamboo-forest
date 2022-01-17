@@ -22,26 +22,6 @@ body {
   font-weight: normal;
   font-style: normal;
 }
-@font-face {
-  font-family: "EBSHUN";
-  src: url("./fonts/EBSHUN_R.ttf") format("truetype");
-}
-@font-face {
-  font-family: "MAKGEOLLI";
-  src: url("./fonts/MAKGEOLLI.ttf") format("truetype");
-}
-@font-face {
-  font-family: "GYEOULNOONKOTT";
-  src: url("./fonts/GyeoulNoonkott.ttf") format("truetype");
-}
-@font-face {
-  font-family: "JEJUHALLASAN";
-  src: url("./fonts/JejuHallasan.ttf") format("truetype");
-}
-@font-face {
-  font-family: "GUNGSEO";
-  src: url("./fonts/gungseo.ttf") format("truetype");
-}
 
 #record_button {
   background-color: transparent;

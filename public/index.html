@@ -23,15 +23,15 @@
       src="bamboo_r.jpg"> -->
 
       <button type="button" id="record_button" onclick="record_button_click();">
-      <img src="microphone.png" height="40" width="40">
+      <img src="./resources/microphone.png" height="40" width="40">
       </button>
 
       <button type="button" id="github_button" onclick="window.open('https://github.com/Sanu7D0/bamboo-forest')">
-      <img src="github.png" height="40" width="40">
+      <img src="./resources/github.png" height="40" width="40">
       </button>
 
       <button type="button" id="instagram_button" onclick="window.open('https://www.instagram.com/rdo.xrl')">
-      <img src="instagram.png" height="40" width="40">
+      <img src="./resources/instagram.png" height="40" width="40">
       </button>
 
       
@@ -55,6 +55,11 @@
       //    record_button_click();
       //  }
       //}
+
+      navigator.mediaDevices.getUserMedia({audio: true}).then( stream => {
+    }).catch( err => {
+        console.log("u got an error:" + err)
+    });
 
       bascket.render();
 

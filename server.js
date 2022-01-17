@@ -1,16 +1,25 @@
 import express from "express";
-import { createServer } from "http";
+// import { createServer } from "http";
+import fs from "fs";
+import { createServer } from "https";
 import { Server } from "socket.io";
 import path from "path";
 import TextContainer from "./src/TextContainer.js";
 
+const options = {
+  key: fs.readFileSync("./private.pem"),
+  cert: fs.readFileSync("./root.crt"),
+};
 const app = express();
-const server = createServer(app);
+const server = createServer(options, app);
 const io = new Server(server);
 
-const __dirname = path.resolve();
-const PORT = 3000;
+const PORT = 443;
+server.listen(PORT, () => {
+  console.log(`Socket IO server listening on port ${PORT}`);
+});
 
+const __dirname = path.resolve();
 const textContainer = new TextContainer();
 
 app.use(express.static(__dirname + "/public"));
@@ -40,10 +49,6 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(`Socket disconnected: ${socket.id}`);
   });
-});
-
-server.listen(PORT, () => {
-  console.log(`Socket IO server listening on port ${PORT}`);
 });
 
 function deleteOldestText(id) {

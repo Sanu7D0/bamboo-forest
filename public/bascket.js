@@ -107,6 +107,9 @@ Bascket.context = function (canvas, ctx) {
   // keep the mouse in sync with rendering
   render.mouse = mouse;*/
 
+  let backgroundImg = new Image();
+  backgroundImg.src = "./resources/bamboo.svg";
+
   function render() {
     // update canvas width, height
     /*const xScale = document.body.clientWidth / canvas.width,
@@ -126,9 +129,7 @@ Bascket.context = function (canvas, ctx) {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    var img = new Image();
-    img.src = "bamboo.svg";    
-    ctx.drawImage(img, 500, 250, 700, 700);
+    ctx.drawImage(backgroundImg, 500, 250, 700, 700);
 
     // DEBUG - 윤곽선
     if (DEBUG_MODE) {
@@ -231,8 +232,7 @@ Bascket.context = function (canvas, ctx) {
 
         // 소리 재생
         try {
-          let popSound = new Audio("popSound.wav");
-          // popSound.muted = true;
+          let popSound = new Audio("./resources/popSound.wav");
           window.focus();
           popSound.play();
         } catch (e) {
