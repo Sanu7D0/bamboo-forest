@@ -1,19 +1,21 @@
-/*#container {
-  width: 1200px;
-  height: 800px;
-  position: relative;
-}*/
+#container {
+  width: 100%;
+  height: 100%;
+  position: static;
+}
 
 canvas {
   margin: 0;
   display: block;
-  /* width: 100%; */
-  /* height: 100%; */
   border: 1px solid black;
+  width: 100%;
+  height: 100%;
+  
 }
 
 body {
-  background-color: skyblue;
+  background-image: "bamboo_r.jpg";
+  background-color: lightgreen;
 }
 
 @font-face {
@@ -44,16 +46,34 @@ body {
   src: url("./fonts/gungseo.ttf") format("truetype");
 }
 
-button {
-  background-color: black;
-  border: none;
-  color: white;
-  padding: 15px 30px;
-  text-align: center;
-  text-decoration: none;
+
+#record_button {
+  background-color: lightgreen;
+  padding: 8px 10px;
   display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+}
+
+#github_button {
+  background-color: lightgreen;
+  padding: 8px 10px;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+}
+
+#instagram_button {
+  background-color: lightgreen;
+  padding: 8px 10px;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 50%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
