@@ -1,6 +1,6 @@
 import { deleteOldestText } from "../server.js";
 
-const MAX_TEXT = 10;
+const MAX_TEXT = 7;
 
 export default class TextContainer {
   constructor() {

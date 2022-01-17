@@ -2,8 +2,7 @@ var Bascket = Bascket || {};
 
 let DEBUG_MODE = false;
 
-const CANVAS_WIDTH = 1200,
-  CANVAS_HEIGHT = 800;
+const COLORS = ["#220C10", "#506C64", "#75CBB9", "#75B8C8"];
 
 Bascket.context = function (canvas, ctx) {
   const Engine = Matter.Engine,
@@ -27,42 +26,55 @@ Bascket.context = function (canvas, ctx) {
   let runner = Runner.create();
   Runner.run(runner, engine);
 
-  canvas.width = CANVAS_WIDTH;
-  canvas.height = CANVAS_HEIGHT;
+  canvas.width = document.body.clientWidth;
+  canvas.height = document.body.clientHeight;
 
-  Composite.add(world, [
-    // walls
-    Bodies.rectangle(0, CANVAS_HEIGHT / 2, CANVAS_HEIGHT, 1, {
+  // walls
+  let walls = [];
+  // left
+  walls.push(
+    Bodies.rectangle(0, canvas.height / 2, canvas.height, 10, {
       isStatic: true,
       text: "",
       angle: Math.PI / 2,
       restitution: 1,
       friction: 0,
       frictionStatic: 0,
-    }),
-    Bodies.rectangle(CANVAS_WIDTH, CANVAS_HEIGHT / 2, CANVAS_HEIGHT, 1, {
+    })
+  );
+  // top
+  walls.push(
+    Bodies.rectangle(canvas.width / 2, 0, canvas.width, 10, {
+      isStatic: true,
+      text: "",
+      restitution: 1,
+      friction: 0,
+      frictionStatic: 0,
+    })
+  );
+  // right
+  walls.push(
+    Bodies.rectangle(canvas.width, canvas.height / 2, canvas.height, 10, {
       isStatic: true,
       text: "",
       angle: Math.PI / 2,
       restitution: 1,
       friction: 0,
       frictionStatic: 0,
-    }),
-    Bodies.rectangle(CANVAS_WIDTH / 2, 0, CANVAS_WIDTH, 1, {
+    })
+  );
+  // bottom
+  walls.push(
+    Bodies.rectangle(canvas.width / 2, canvas.height, canvas.width, 10, {
       isStatic: true,
       text: "",
       restitution: 1,
       friction: 0,
       frictionStatic: 0,
-    }),
-    Bodies.rectangle(CANVAS_WIDTH / 2, CANVAS_HEIGHT, CANVAS_WIDTH, 1, {
-      isStatic: true,
-      text: "",
-      restitution: 1,
-      friction: 0,
-      frictionStatic: 0,
-    }),
-  ]);
+    })
+  );
+
+  Composite.add(world, walls);
 
   // 중력 0
   engine.gravity.y = 0;
@@ -87,6 +99,18 @@ Bascket.context = function (canvas, ctx) {
   render.mouse = mouse;*/
 
   function render() {
+    // update canvas width, height
+    /*const xScale = document.body.clientWidth / canvas.width,
+      yScale = document.body.clientHeight / canvas.height;*/
+    canvas.width = document.body.clientWidth;
+    canvas.height = document.body.clientHeight;
+
+    // console.log(xScale, yScale);
+    // update wall width, height
+    /*walls.forEach((wall) => {
+      Body.scale(wall, xScale, yScale);
+    });*/
+
     let bodies = Composite.allBodies(engine.world);
 
     window.requestAnimationFrame(render);
@@ -129,6 +153,7 @@ Bascket.context = function (canvas, ctx) {
       ctx.rotate(b.angle);
 
       ctx.font = `${30 * b.scale}px BMDOHYEON`;
+      ctx.fillStyle = b.color;
       ctx.fillText(b.text, 0, 3 * b.scale); // y 보정 (baseline이 안 맞는다)
 
       ctx.restore(); // restore ctx properties
@@ -140,10 +165,11 @@ Bascket.context = function (canvas, ctx) {
       text = obj.text;
 
     const vector = getRandomVector();
+    const color = COLORS[getRandomIntInclusive(0, COLORS.length)];
     const textArray = text.split("");
 
     // 왼쪽에서 오면 글자 순서 반대로
-    if (vector.from.x < CANVAS_WIDTH / 2) {
+    if (vector.from.x < canvas.width / 2) {
       textArray.reverse();
     }
 
@@ -177,6 +203,7 @@ Bascket.context = function (canvas, ctx) {
           inverseInertia: 0,
           text: char,
           scale: scale,
+          color: color,
         });
 
         Body.setVelocity(
@@ -210,31 +237,31 @@ Bascket.context = function (canvas, ctx) {
     // to = 중앙에서 특정 반지름을 가진 원 안 임의의 점
 
     let f = [0, 0];
-    const randomLength = getRandom(0, 2 * CANVAS_WIDTH + 2 * CANVAS_HEIGHT);
-    if (0 <= randomLength && randomLength < CANVAS_WIDTH) {
+    const randomLength = getRandom(0, 2 * canvas.width + 2 * canvas.height);
+    if (0 <= randomLength && randomLength < canvas.width) {
       f[0] = randomLength;
     } else if (
-      CANVAS_WIDTH <= randomLength &&
-      randomLength < CANVAS_WIDTH + CANVAS_HEIGHT
+      canvas.width <= randomLength &&
+      randomLength < canvas.width + canvas.height
     ) {
-      f[0] = CANVAS_WIDTH;
-      f[1] = randomLength - CANVAS_WIDTH;
+      f[0] = canvas.width;
+      f[1] = randomLength - canvas.width;
     } else if (
-      CANVAS_WIDTH + CANVAS_HEIGHT <= randomLength &&
-      randomLength < 2 * CANVAS_WIDTH + CANVAS_HEIGHT
+      canvas.width + canvas.height <= randomLength &&
+      randomLength < 2 * canvas.width + canvas.height
     ) {
-      f[0] = CANVAS_WIDTH - (randomLength - (CANVAS_WIDTH + CANVAS_HEIGHT));
-      f[1] = CANVAS_HEIGHT;
+      f[0] = canvas.width - (randomLength - (canvas.width + canvas.height));
+      f[1] = canvas.height;
     } else {
       f[1] =
-        CANVAS_HEIGHT - (randomLength - (2 * CANVAS_WIDTH + CANVAS_HEIGHT));
+        canvas.height - (randomLength - (2 * canvas.width + canvas.height));
     }
 
     let t = [0, 0];
-    const maxRadius = Math.min(CANVAS_WIDTH, CANVAS_HEIGHT) / 3;
+    const maxRadius = Math.min(canvas.width, canvas.height) / 3;
     const radius = getRandom(0, maxRadius);
-    t[0] = CANVAS_WIDTH / 2 + radius * Math.sin(getRandom(0, 2 * Math.PI));
-    t[1] = CANVAS_HEIGHT / 2 + radius * Math.cos(getRandom(0, 2 * Math.PI));
+    t[0] = canvas.width / 2 + radius * Math.sin(getRandom(0, 2 * Math.PI));
+    t[1] = canvas.height / 2 + radius * Math.cos(getRandom(0, 2 * Math.PI));
 
     return {
       from: {
@@ -250,6 +277,12 @@ Bascket.context = function (canvas, ctx) {
 
   function getRandom(min, max) {
     return Math.random() * (max - min) + min;
+  }
+
+  function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //최댓값도 포함, 최솟값도 포함
   }
 
   function setDebugMode(bool) {
