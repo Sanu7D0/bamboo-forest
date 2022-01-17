@@ -28,9 +28,9 @@ io.on("connection", (socket) => {
   // 새로 접속 시 textContainer에 저장된 텍스트들 방출
   io.to(socket.id).emit("data-start", textContainer.textsJson);
 
-  socket.on("data-voice", (text) => {
-    textContainer.onVoiceData(text);
-    io.to("main-room").emit("data-text", text);
+  socket.on("data-voice", (obj) => {
+    textContainer.addText(obj);
+    io.to("main-room").emit("data-text", obj);
   });
 
   socket.on("forceDisconnect", () => {
@@ -45,3 +45,9 @@ io.on("connection", (socket) => {
 server.listen(PORT, () => {
   console.log(`Socket IO server listening on port ${PORT}`);
 });
+
+function deleteOldestText(id) {
+  io.to("main-room").emit("data-delete", id);
+}
+
+export { deleteOldestText };
