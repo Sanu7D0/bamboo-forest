@@ -17,6 +17,11 @@
       <canvas id="main-canvas">
       </canvas>
 
+      <!-- <img 
+      id="bamboo_img"
+      class="fit-picture"
+      src="bamboo_r.jpg"> -->
+
       <button type="button" id="record_button" onclick="record_button_click();">
       <img src="microphone.png" height="40" width="40">
       </button>
@@ -29,6 +34,8 @@
       <img src="instagram.png" height="40" width="40">
       </button>
 
+      
+
     </div>
     <script type="text/javascript">
       // socket = io.connect('http://x.x.x.x:80');
@@ -39,12 +46,6 @@
       const canvas = document.getElementById("main-canvas");
       const ctx = canvas.getContext("2d");
       const bascket = Bascket.context(canvas, ctx);
-
-      //var img = new Image();
-      //img.onload = function(){
-      //  ctx.drawImage(img, 60, 60, 80, 80);
-      //}
-      //img.src = "voice.png";    
 
       //canvas.onclick = function(event) {
       //  const x = event.layerX;

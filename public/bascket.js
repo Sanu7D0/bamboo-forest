@@ -126,6 +126,10 @@ Bascket.context = function (canvas, ctx) {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    var img = new Image();
+    img.src = "bamboo.svg";    
+    ctx.drawImage(img, 500, 250, 700, 700);
+
     // DEBUG - 윤곽선
     if (DEBUG_MODE) {
       ctx.beginPath();

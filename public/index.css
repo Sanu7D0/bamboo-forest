@@ -13,8 +13,6 @@ canvas {
 }
 
 body {
-  background-image: "bamboo_r.jpg";
-  /* background-color: #cdd3d5; */
 }
 
 @font-face {
@@ -52,7 +50,7 @@ body {
   cursor: pointer;
   border-radius: 25%;
   position: fixed;
-  top: 25%;
+  top: 35%;
   left: 20px;
 }
 
@@ -63,7 +61,7 @@ body {
   cursor: pointer;
   border-radius: 25%;
   position: fixed;
-  bottom: 50%;
+  top: 50%;
   left: 20px;
 }
 
@@ -73,7 +71,7 @@ body {
   display: inline-block;
   cursor: pointer;
   border-radius: 25%;
-  position: absolute;
+  position: fixed;
   left: 20px;
-  bottom: 30%;
+  top: 65%;
 }
