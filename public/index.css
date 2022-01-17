@@ -13,8 +13,6 @@ canvas {
 }
 
 body {
-  /* background-image: "bamboo.png"; */
-  /* background-color: #cdd3d5;  */
 }
 
 @font-face {
@@ -76,10 +74,4 @@ body {
   position: fixed;
   left: 20px;
   top: 65%;
-}
-
-#bamboo_img {
-  position: fixed;
-  bottom: 0;
-  left: 0;
 }
