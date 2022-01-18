@@ -7,8 +7,8 @@ import path from "path";
 import TextContainer from "./src/TextContainer.js";
 
 const options = {
-  key: fs.readFileSync("./private.pem"),
-  cert: fs.readFileSync("./root.crt"),
+  key: fs.readFileSync("./keys/private.pem"),
+  cert: fs.readFileSync("./keys/root.crt"),
 };
 const app = express();
 const server = createServer(options, app);
@@ -27,9 +27,9 @@ app.use(express.static(__dirname + "/public"));
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
-app.get("/test", (req, res) => {
+/*app.get("/test", (req, res) => {
   res.sendFile(__dirname + "/public/index_test.html");
-});
+});*/
 
 io.on("connection", (socket) => {
   console.log(`Socket connected: ${socket.id}`);
@@ -38,7 +38,11 @@ io.on("connection", (socket) => {
   io.to(socket.id).emit("data-start", textContainer.textsJson);
 
   socket.on("data-voice", (obj) => {
-    textContainer.addText(obj);
+    try {
+      textContainer.addText(obj);
+    } catch (e) {
+      console.log(e.message);
+    }
     io.to("main-room").emit("data-text", obj);
   });
 
