@@ -108,7 +108,7 @@ Bascket.context = function (canvas, ctx) {
   render.mouse = mouse;*/
 
   let backgroundImg = new Image();
-  backgroundImg.src = "./resources/bamboo.svg";
+  backgroundImg.src = "IMG_0245.jpg";
 
   function render() {
     // update canvas width, height
@@ -127,9 +127,11 @@ Bascket.context = function (canvas, ctx) {
 
     window.requestAnimationFrame(render);
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    let imgWidth =  canvas.height * 0.4,
+    imgHeight = canvas.height * 0.8;
 
-    ctx.drawImage(backgroundImg, 500, 250, 700, 700);
+    ctx.drawImage(backgroundImg, canvas.width*0.1, canvas.height-imgHeight, imgWidth, imgHeight);
 
     // DEBUG - 윤곽선
     if (DEBUG_MODE) {
