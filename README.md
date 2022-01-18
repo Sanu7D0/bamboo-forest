@@ -33,7 +33,10 @@ npm run start
 You can push a microphone button and add a korean sentence.  
 The letters of the sentence will be a independent object, and floating in the space.
 
-## License
+<img src="https://user-images.githubusercontent.com/96765048/149897226-5c1b6413-a53d-43e5-a675-bc2306319459.PNG"/>
+
+
+## Libraries
 
 annyang.js  
 matter-js
