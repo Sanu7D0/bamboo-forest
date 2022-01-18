@@ -131,7 +131,9 @@ Bascket.context = function (canvas, ctx) {
     let imgWidth =  canvas.height * 0.4,
     imgHeight = canvas.height * 0.8;
 
+
     ctx.drawImage(backgroundImg, canvas.width*0.1, canvas.height-imgHeight, imgWidth, imgHeight);
+
 
     // DEBUG - 윤곽선
     if (DEBUG_MODE) {
@@ -190,7 +192,7 @@ Bascket.context = function (canvas, ctx) {
     }
 
     for (let i = 0; i < text.length; i++) {
-      let waitTime = 100 * scale;
+      let waitTime = 200 * scale;
       let char = textArray[i];
 
       if (char === " " || char === "") {
@@ -203,7 +205,7 @@ Bascket.context = function (canvas, ctx) {
         const f = vector.from,
           t = vector.to;
         const angle = Math.atan((t.y - f.y) / (t.x - f.x));
-        const speed = 7;
+        const speed = 5;
 
         // TODO: 바운더리 안에서 소환하기
 
@@ -215,8 +217,8 @@ Bascket.context = function (canvas, ctx) {
           mass: mass,
           inverseMass: 1 / mass,
           angle: angle,
-          inertia: Infinity,
-          inverseInertia: 0,
+          // inertia: Infinity,
+          // inverseInertia: 0,
           text: char,
           scale: scale,
           color: color,
