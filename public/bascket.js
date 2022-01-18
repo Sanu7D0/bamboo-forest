@@ -127,13 +127,17 @@ Bascket.context = function (canvas, ctx) {
 
     window.requestAnimationFrame(render);
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    let imgWidth =  canvas.height * 0.4,
-    imgHeight = canvas.height * 0.8;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let imgWidth = canvas.height * 0.4,
+      imgHeight = canvas.height * 0.8;
 
-
-    ctx.drawImage(backgroundImg, canvas.width*0.1, canvas.height-imgHeight, imgWidth, imgHeight);
-
+    ctx.drawImage(
+      backgroundImg,
+      canvas.width * 0.1,
+      canvas.height - imgHeight,
+      imgWidth,
+      imgHeight
+    );
 
     // DEBUG - 윤곽선
     if (DEBUG_MODE) {
@@ -159,6 +163,8 @@ Bascket.context = function (canvas, ctx) {
     ctx.textAlign = "center";
     ctx.fillStyle = "black";
 
+    const fontSizeBase = Math.max(canvas.width, canvas.height) / 50;
+
     for (let i = 0; i < bodies.length; i++) {
       let b = bodies[i];
       let x = b.position.x,
@@ -170,7 +176,7 @@ Bascket.context = function (canvas, ctx) {
       ctx.translate(x, y);
       ctx.rotate(b.angle);
 
-      ctx.font = `${30 * b.scale}px BMDOHYEON`;
+      ctx.font = `${fontSizeBase * b.scale}px BMDOHYEON`;
       ctx.fillStyle = b.color;
       ctx.fillText(b.text, 0, 3 * b.scale); // y 보정 (baseline이 안 맞는다)
 
